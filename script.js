@@ -23,6 +23,7 @@ let tower3=[]
 
 let numberOfDisc = 3;
 let numberOfSteps = 0;
+let discFlashWaitTime = 50;
 
 function generateTower(){
     for (let index = numberOfDisc; index >= 1; index--) {
@@ -92,17 +93,17 @@ function t3tot2(){
         return false;
 }
 
-function Rules_CheckIsMovedDiscSmallerThanTargetTower(from_Tower, To_Tower){
-    let To_TowerDiscValue = -1;
+function Rules_CheckIsMovedDiscSmallerThanTargetTower(from_Tower, to_Tower){
+    let to_TowerDiscValue = -1;
 
-    if (To_Tower.length===0){
-        To_TowerDiscValue = 99; // an impossible value to beat
+    if (to_Tower.length===0){
+        to_TowerDiscValue = 99; // an impossible value to beat
     }
     else{
-        To_TowerDiscValue = To_Tower[To_Tower.length-1]
+        to_TowerDiscValue = to_Tower[to_Tower.length-1]
     }
     
-    if (from_Tower[from_Tower.length-1] < To_TowerDiscValue)
+    if (from_Tower[from_Tower.length-1] < to_TowerDiscValue)
         return true;
     else{
         const warning = "disc is bigger than target tower! pls try again.";
@@ -210,13 +211,14 @@ document.addEventListener('keydown', function(event) {
         movement(moveValue);
         fromtower=-1;
         totower=-1;
-        consoleLogTowerInfo();
+        // consoleLogTowerInfo();
         if (checkWin())
             console.log("YOU WIN!");
     }
 });
 
 function fromTowerPreProcess(towerNumber){
+    // console.log("fromTowerPreProcess");
     if (!IsTowerEmpty(towerNumber))
         flashDisc(towerNumber);    
 }
@@ -350,36 +352,19 @@ function sleep(ms) {
 
 function flashDisc(towerNum){
     let disc_color = html_towers[towerNum].firstChild.style.backgroundColor;
-    console.log("original disc color is " + disc_color);
+    // console.log("original disc color is " + disc_color);
     html_towers[towerNum].firstChild.style.backgroundColor = 'blue';
 
-    sleep(50).then(() => { 
+    sleep(discFlashWaitTime).then(() => { 
         html_towers[towerNum].firstChild.style.backgroundColor = disc_color;
-        sleep(50).then(()=>{ 
+        sleep(discFlashWaitTime).then(()=>{ 
             html_towers[towerNum].firstChild.style.backgroundColor = 'blue';
-            sleep(50).then(()=>{ 
+            sleep(discFlashWaitTime).then(()=>{ 
                 html_towers[towerNum].firstChild.style.backgroundColor = disc_color;
             });
         });
     });
 }
-
-// while(totower==-1)
-// {
-//     sleep(1000).then(() => {
-//         console.log(totower)
-//     })
-// }
-
-
-
-  
-// test case
-// moveDisc(TowerNumber.Tower1, TowerNumber.Tower3)
-
-// for (let index = 0; index < discDict[0].length; index++) {
-//     removeDisc(html_towers[0][index], TowerNumber.Tower1);    
-// }
 
 function blinkElement(element){
     element.style.visibility = "hidden"
@@ -394,9 +379,75 @@ function blinkElement(element){
     });
 }
 
+// https://www.geeksforgeeks.org/c-program-for-tower-of-hanoi/
+// function hanoiAlgo(n, from_Tower, to_Tower, aux_Tower)
+// {
+//     if (n===0){
+//         console.log("return")
+//         return;
+//     }
+//     (async () => {
+//         sleep(100).then(async () => { 
+//             hanoiAlgo(n-1, from_Tower, aux_Tower, to_Tower);
+//             console.log(`move disc ${n} from ${from_Tower} to ${to_Tower}`);
+//             (async () => {
+//                 sleep(100).then(() => { 
+//                     document.dispatchEvent(new KeyboardEvent('keydown', {'key': from_Tower}));
+//                     (async () => {
+//                         sleep(100).then(() => { 
+//                             document.dispatchEvent(new KeyboardEvent('keydown', {'key': to_Tower}));
+//                             (async () => {
+//                                 sleep(100).then(() => { 
+//                                     hanoiAlgo(n-1, aux_Tower, to_Tower, from_Tower);
+//                                 });
+//                             })();  
+//                         });
+//                     })();  
+//                 });            
+//             })();  
+//         });  
+//     })();          
+// }
+
+// https://www.sitepoint.com/delay-sleep-pause-wait/
+function sleep2(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+  }
+
+function hanoiAlgo(n, from_Tower, to_Tower, aux_Tower)
+{
+    console.log(`${n}, ${from_Tower}, ${to_Tower}, ${aux_Tower}`)
+    if (n===0){
+        console.log("return")
+        return;
+    }
+    // (async () => {
+        hanoiAlgo(n-1, from_Tower, aux_Tower, to_Tower);
+        console.log(`move disc ${n} from ${from_Tower} to ${to_Tower}`);
+        document.dispatchEvent(new KeyboardEvent('keydown', {'key': from_Tower}));
+        sleep2(1000);
+        document.dispatchEvent(new KeyboardEvent('keydown', {'key': to_Tower}));
+        hanoiAlgo(n-1, aux_Tower, to_Tower, from_Tower);
+    // })();
+}
+
+
+hanoiAlgo(numberOfDisc, TowerNumber.Tower1+1, TowerNumber.Tower3+1, TowerNumber.Tower2+1)
+
+
+
+
+
+
+
 // blinkElement (container)
 // blinkElement(html_towers[towerNum].firstChild);
-    
-
-
 allDisc = document.querySelectorAll('.disc')
+
+
+
+
