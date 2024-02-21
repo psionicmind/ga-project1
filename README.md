@@ -5,6 +5,8 @@ ga-project1
 
 ![alt text](https://github.com/psionicmind/ga-project1/blob/main/img/Images%20of%20your%20actual%20game.png?raw=true)
 
+![with reset and show solution buttons](https://github.com/psionicmind/ga-project1/blob/main/img/Images%20of%20your%20actual%20game%20v2.png?raw=true)
+
 # Inventor
 Édouard Lucas
 
