@@ -1,5 +1,12 @@
 // Reference: https://www.youtube.com/watch?v=OUWFY1qY47Y by Adson Paulo Aug 30, 202
 
+// import {startStopwatch, stopStopwatch, stopWatchStartTime } from './helperClass/stopwatch.js';
+
+
+
+
+
+
 // LOGIC
 
 const Movements={
@@ -25,12 +32,28 @@ let numberOfDisc = 3;
 let numberOfSteps = 0;
 let discFlashWaitTime = 50;
 
+let fromtower= -1;
+let totower=-1;
+
+let showSolutionSteps = 0;
+let hanoiArray=[];
+
+let html_towers = document.querySelectorAll('.tower')
+let feedback = document.querySelector(".feedback")
+let steps = document.querySelector(".steps")
+let container = document.querySelector(".container")
+let diffDisc = document.querySelectorAll(".disc")
+let showSolutionButton = document.querySelector(".show-solution")
+
+let timer = document.querySelector(".timer")
+
+
 function generateTower(){
     for (let index = numberOfDisc; index >= 1; index--) {
         tower1.push(index);        
     }
 }
-generateTower(numberOfDisc)
+generateTower(numberOfDisc);
 consoleLogTowerInfo();
 
 function t1tot2(){
@@ -143,9 +166,10 @@ function movement(keyNumber){
     }
 }
 
-let fromtower= -1;
-let totower=-1;
-
+// showSolutionButton.addEventListener('click', function(event) {
+//     console.log("inside click event listener")
+//     showSolution();
+// });
 
 
 document.addEventListener('keydown', function(event) {
@@ -212,13 +236,18 @@ document.addEventListener('keydown', function(event) {
         fromtower=-1;
         totower=-1;
         // consoleLogTowerInfo();
-        if (checkWin())
+        if (checkWin()){
             console.log("YOU WIN!");
+            stopStopwatch();
+        }
     }
 });
 
 function fromTowerPreProcess(towerNumber){
     // console.log("fromTowerPreProcess");
+    if (!stopWatchStartTime)
+        startStopwatch();
+
     if (!IsTowerEmpty(towerNumber))
         flashDisc(towerNumber);    
 }
@@ -253,35 +282,16 @@ function consoleLogTowerInfo(){
 }
 
 function checkWin(){
-    // if (tower3.length != numberOfDisc){
-    //     return false;
-    // }
-    // else{
-    //     uiUpdate_Feedback("YOU WIN!");
-    //     return true;
-    // }
-
     if ((tower2.length == numberOfDisc)|| (tower3.length == numberOfDisc)){
         uiUpdate_Feedback("YOU WIN!");
+        // app.say("You Win!")        
         return true;
     }
     else
         return false;
-
-    // these for loop below might be be useful, can consider remove.
-    // as if number of disc is equal to length, then win.  bigger disc cannot be
-    // stacked on top of smaller disc.
-    // for (let index = 0; index < numberOfDisc; index++) {
-    //     if (tower3[index] != (numberOfDisc - index))
-    //         return false;
-    // }
-
-
 }
 
 //HTML
-
-
 let discDict = [[], [], []];
 
 // https://www.w3schools.com/tags/ref_colornames.asp
@@ -306,12 +316,6 @@ for (let index = 0; index < numberOfDisc; index++) {
 //********************************************************************************
 //********************************************************************************
 
-let html_towers = document.querySelectorAll('.tower')
-let feedback = document.querySelector(".feedback")
-let steps = document.querySelector(".steps")
-let container = document.querySelector(".container")
-let diffDisc = document.querySelectorAll(".disc")
-
 function uiUpdate_Feedback(text){
     feedback.innerHTML = `${text}`;
 }
@@ -319,7 +323,6 @@ function uiUpdate_Feedback(text){
 function uiUpdate_Steps(stepValue){
     steps.innerHTML = `Number of Steps: ${stepValue}`;
 }
-
 
 function insertDisc(disc, towerNum){
     // html_towers[towerNum].innerHTML = disc.outerHTML + html_towers[towerNum].innerHTML;
@@ -334,11 +337,13 @@ function removeDisc(towerNum){
     return disc;
 }
 
-// this is for INITIAL loading of all disc to tower1 using discDict
-for (let index = 0; index < discDict[0].length; index++) {
-    insertDisc(discDict[0][index], TowerNumber.Tower1);    
+function loadAllDiscToTower1(){
+    // this is for INITIAL loading of all disc to tower1 using discDict
+    for (let index = 0; index < discDict[0].length; index++) {
+        insertDisc(discDict[0][index], TowerNumber.Tower1);    
+    }
 }
-
+loadAllDiscToTower1();
 // removeDisc(discDict[0][discDict[0].length-1], TowerNumber.Tower1);    
 
 function moveDisc(fromWhichTower, ToWhichTower){
@@ -348,7 +353,6 @@ function moveDisc(fromWhichTower, ToWhichTower){
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
 
 function flashDisc(towerNum){
     let disc_color = html_towers[towerNum].firstChild.style.backgroundColor;
@@ -380,73 +384,121 @@ function blinkElement(element){
 }
 
 // https://www.geeksforgeeks.org/c-program-for-tower-of-hanoi/
-// function hanoiAlgo(n, from_Tower, to_Tower, aux_Tower)
-// {
-//     if (n===0){
-//         console.log("return")
-//         return;
-//     }
-//     (async () => {
-//         sleep(100).then(async () => { 
-//             hanoiAlgo(n-1, from_Tower, aux_Tower, to_Tower);
-//             console.log(`move disc ${n} from ${from_Tower} to ${to_Tower}`);
-//             (async () => {
-//                 sleep(100).then(() => { 
-//                     document.dispatchEvent(new KeyboardEvent('keydown', {'key': from_Tower}));
-//                     (async () => {
-//                         sleep(100).then(() => { 
-//                             document.dispatchEvent(new KeyboardEvent('keydown', {'key': to_Tower}));
-//                             (async () => {
-//                                 sleep(100).then(() => { 
-//                                     hanoiAlgo(n-1, aux_Tower, to_Tower, from_Tower);
-//                                 });
-//                             })();  
-//                         });
-//                     })();  
-//                 });            
-//             })();  
-//         });  
-//     })();          
-// }
 
-// https://www.sitepoint.com/delay-sleep-pause-wait/
-function sleep2(milliseconds) {
-    const date = Date.now();
-    let currentDate = null;
-    do {
-      currentDate = Date.now();
-    } while (currentDate - date < milliseconds);
-  }
 
-function hanoiAlgo(n, from_Tower, to_Tower, aux_Tower)
+function hanoiAlgo2(n, from_Tower, to_Tower, aux_Tower)
 {
-    console.log(`${n}, ${from_Tower}, ${to_Tower}, ${aux_Tower}`)
+    // setTimeout( ()=>{
+    // console.log(`${n}, ${from_Tower}, ${to_Tower}, ${aux_Tower}`)
     if (n===0){
         console.log("return")
         return;
     }
     // (async () => {
-        hanoiAlgo(n-1, from_Tower, aux_Tower, to_Tower);
-        console.log(`move disc ${n} from ${from_Tower} to ${to_Tower}`);
-        document.dispatchEvent(new KeyboardEvent('keydown', {'key': from_Tower}));
-        sleep2(1000);
-        document.dispatchEvent(new KeyboardEvent('keydown', {'key': to_Tower}));
-        hanoiAlgo(n-1, aux_Tower, to_Tower, from_Tower);
+        hanoiAlgo2(n-1, from_Tower, aux_Tower, to_Tower);
+        // console.log(`move disc ${n} from ${from_Tower} to ${to_Tower}`);
+        console.log(`move disc from ${from_Tower} to ${to_Tower}`);
+        hanoiArray.push({from_Tower, to_Tower});
+        // document.dispatchEvent(new KeyboardEvent('keydown', {'key': from_Tower}));
+
+        // https://www.sitepoint.com/delay-sleep-pause-wait/
+        // // sleep2(1000);
+        // // await sleep(1000);
+        // document.dispatchEvent(new KeyboardEvent('keydown', {'key': to_Tower}));
+        hanoiAlgo2(n-1, aux_Tower, to_Tower, from_Tower);
     // })();
+    // }, 1000)
+}
+
+// hanoiAlgo1(numberOfDisc, TowerNumber.Tower1+1, TowerNumber.Tower3+1, TowerNumber.Tower2+1)
+hanoiAlgo2(numberOfDisc, TowerNumber.Tower1+1, TowerNumber.Tower3+1, TowerNumber.Tower2+1)
+console.log(hanoiArray)
+
+
+
+var stopWatchStartTime; // to keep track of the start time
+var stopwatchInterval; // to keep track of the interval
+var elapsedPausedTime = 0; // to keep track of the elapsed time while stopped
+
+// https://www.educative.io/answers/how-to-create-a-stopwatch-in-javascript
+function startStopwatch() {
+    if (!stopwatchInterval) {
+      stopWatchStartTime = new Date().getTime() - elapsedPausedTime; // get the starting time by subtracting the elapsed paused time from the current time
+      stopwatchInterval = setInterval(updateStopwatch, 1000); // update every second
+    }
+}
+
+function stopStopwatch() {
+    clearInterval(stopwatchInterval); // stop the interval
+    elapsedPausedTime = new Date().getTime() - stopWatchStartTime; // calculate elapsed paused time
+    stopwatchInterval = null; // reset the interval variable
+}
+  
+function resetStopwatch() {
+    stopStopwatch(); // stop the interval
+    elapsedPausedTime = 0; // reset the elapsed paused time variable
+    document.getElementById("stopwatch").innerHTML = "Timer 00:00"; // reset the display
+}
+
+function updateStopwatch() {
+    var currentTime = new Date().getTime(); // get current time in milliseconds
+    var elapsedTime = currentTime - stopWatchStartTime; // calculate elapsed time in milliseconds
+    var seconds = Math.floor(elapsedTime / 1000) % 60; // calculate seconds
+    var minutes = Math.floor(elapsedTime / 1000 / 60) % 60; // calculate minutes
+    //var hours = Math.floor(elapsedTime / 1000 / 60 / 60); // calculate hours
+    var displayTime = "Timer " + /*pad(hours) + ":" + */pad(minutes) + ":" + pad(seconds); // format display time
+    document.getElementById("stopwatch").innerHTML = displayTime; // update the display
+}
+  31
+function pad(number) {
+    // add a leading zero if the number is less than 10
+    return (number < 10 ? "0" : "") + number;
 }
 
 
-hanoiAlgo(numberOfDisc, TowerNumber.Tower1+1, TowerNumber.Tower3+1, TowerNumber.Tower2+1)
+function showSolution(){
+    console.log("in showsolution")
+    console.log(`in showSolution ${showSolutionSteps}`);
+    console.log(`in hanoiArray.length ${hanoiArray.length}`);
+    if (showSolutionSteps < hanoiArray.length){
+        moveValue = (hanoiArray[showSolutionSteps]['from_Tower'])*10+(hanoiArray[showSolutionSteps]['to_Tower']);
+        console.log("moveValue=" + moveValue);
+        movement(moveValue);
+        showSolutionSteps++;
+    }
+}
+
+function resetGame(){
+    console.log("reset game")
+    // elapsedPausedTime=0;
+    stopWatchStartTime=0;
+    resetStopwatch();
+
+    numberOfSteps = 0;
+    uiUpdate_Steps(0);
+    uiUpdate_Feedback("Game Reset")
+    for (let index = 0; index < tower2.length; index++) {
+        removeDisc(TowerNumber.Tower2)        
+    }
+    tower2=[];
+
+    for (let index2 = 0; index2 < tower3.length; index2++) {
+        removeDisc(TowerNumber.Tower3)        
+    }
+    tower3=[];
+
+    generateTower(numberOfDisc);
+    loadAllDiscToTower1();
+    showSolutionSteps=0;
+    fromtower=-1;
+    totower=-1;
 
 
+}
 
-
-
-
-
-// blinkElement (container)
+blinkElement (container)
 // blinkElement(html_towers[towerNum].firstChild);
-allDisc = document.querySelectorAll('.disc')
+// const allDisc = document.querySelectorAll('.disc')
 
 
 
