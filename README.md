@@ -16,6 +16,9 @@ ga-project1
 # Games Description
 Tower of Hanoi is a mathematical game which consist of three sticks and a number of disc of various diameters.  The game begins with all discs stacked with the biggest disc at the bottom of the stick to the smallest disc at the top of the stick.
 
+# Tech Stack
+JavaScript, HTML, CSS
+
 # Rules
 Game rules:
 1. Only one disc may be moved at a time.
