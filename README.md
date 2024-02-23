@@ -12,10 +12,6 @@ ga-project1
 
 Édouard Lucas
 
-# Start Game Now!
-
-[Let's GO!](https://ga-project1-teal.vercel.app/)
-
 # Games Description
 
 Tower of Hanoi is a mathematical game which consist of three sticks and a number of disc of various diameters. The game begins with all discs stacked with the biggest disc at the bottom of the stick to the smallest disc at the top of the stick.
@@ -43,7 +39,11 @@ The control keys on the keyboard are :
 2. keypad number 2
 3. keypad number 3
 
-# Game Logic
+### Start Game Now!
+
+[Let's GO!](https://ga-project1-teal.vercel.app/)
+
+### Game Logic
 
 - initial keypress of any control keys will be indicated as the origin tower you want to move FROM.
 - the next keypress of any control keys will be indicated as the destinated tower you want to move TO.
@@ -55,7 +55,7 @@ The control keys on the keyboard are :
   timer and steps will be reset
 - if origin tower is empty, pressing the tower number will prompt an error message.
 
-# Win Lose
+### Win Lose
 
 To win, you need to transfer all disc from tower 1 to any other tower, with the disc stacked smallest at the very top to the largest disc at the very bottom.
 There is no losing, timer keeps running. User can reset to restart the game.
