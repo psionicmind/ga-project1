@@ -1,7 +1,3 @@
-// Reference: https://www.youtube.com/watch?v=OUWFY1qY47Y by Adson Paulo Aug 30, 202
-
-// import {startStopwatch, stopStopwatch, stopWatchStartTime } from './helperClass/stopwatch.js';
-
 // LOGIC
 
 const Movements = {
@@ -146,11 +142,6 @@ function movement(keyNumber) {
   }
 }
 
-// showSolutionButton.addEventListener('click', function(event) {
-//     console.log("inside click event listener")
-//     showSolution();
-// });
-
 document.addEventListener("keydown", function (event) {
   uiUpdate_Feedback("");
   if (event.key == 1) {
@@ -202,7 +193,6 @@ document.addEventListener("keydown", function (event) {
     movement(moveValue);
     fromtower = -1;
     totower = -1;
-    // consoleLogTowerInfo();
     if (checkWin()) {
       console.log("YOU WIN!");
       stopStopwatch();
@@ -211,7 +201,6 @@ document.addEventListener("keydown", function (event) {
 });
 
 function fromTowerPreProcess(towerNumber) {
-  // console.log("fromTowerPreProcess");
   if (!stopWatchStartTime) startStopwatch();
 
   if (!IsTowerEmpty(towerNumber)) flashDisc(towerNumber);
@@ -248,7 +237,6 @@ function consoleLogTowerInfo() {
 function checkWin() {
   if (tower2.length == numberOfDisc || tower3.length == numberOfDisc) {
     uiUpdate_Feedback("YOU WIN!");
-    // app.say("You Win!")
     return true;
   } else return false;
 }
@@ -270,11 +258,9 @@ const Disc_Color = [
 ];
 
 for (let index = 0; index < numberOfDisc; index++) {
-  // let basePlate = document.getElementsByClassName('base-plate');
   let tempDisc = document.createElement("div");
   tempDisc.classList.add("disc"); // so can use disc class at css
   tempDisc.style.backgroundColor = Disc_Color[index];
-  // tempDisc.style.width = basePlate.style.width - (index * 10);
   tempDisc.style.width = 180 - (index + 1) * 20 + "px";
 
   // initially on game start, only tower 1 will be loaded with disc,
@@ -297,26 +283,21 @@ function uiUpdate_Steps(stepValue) {
 }
 
 function insertDisc(disc, towerNum) {
-  // html_towers[towerNum].innerHTML = disc.outerHTML + html_towers[towerNum].innerHTML;
   html_towers[towerNum].prepend(disc);
 }
 
 function removeDisc(towerNum) {
-  // html_towers[towerNum].innerHTML = html_towers[towerNum].innerHTML - html_towers[towerNum].innerHTML[0];
   let disc = html_towers[towerNum].firstChild;
   html_towers[towerNum].removeChild(disc);
-  // html_towers[towerNum+1].prepend(disc);
   return disc;
 }
 
 function loadAllDiscToTower1() {
-  // this is for INITIAL loading of all disc to tower1 using discDict
   for (let index = 0; index < discDict[0].length; index++) {
     insertDisc(discDict[0][index], TowerNumber.Tower1);
   }
 }
 loadAllDiscToTower1();
-// removeDisc(discDict[0][discDict[0].length-1], TowerNumber.Tower1);
 
 function moveDisc(fromWhichTower, ToWhichTower) {
   insertDisc(removeDisc(fromWhichTower), ToWhichTower);
@@ -328,7 +309,6 @@ function sleep(ms) {
 
 function flashDisc(towerNum) {
   let disc_color = html_towers[towerNum].firstChild.style.backgroundColor;
-  // console.log("original disc color is " + disc_color);
   html_towers[towerNum].firstChild.style.backgroundColor = "blue";
 
   sleep(discFlashWaitTime).then(() => {
@@ -358,29 +338,16 @@ function blinkElement(element) {
 // https://www.geeksforgeeks.org/c-program-for-tower-of-hanoi/
 
 function hanoiAlgo2(n, from_Tower, to_Tower, aux_Tower) {
-  // setTimeout( ()=>{
-  // console.log(`${n}, ${from_Tower}, ${to_Tower}, ${aux_Tower}`)
   if (n === 0) {
     console.log("return");
     return;
   }
-  // (async () => {
   hanoiAlgo2(n - 1, from_Tower, aux_Tower, to_Tower);
-  // console.log(`move disc ${n} from ${from_Tower} to ${to_Tower}`);
   console.log(`move disc from ${from_Tower} to ${to_Tower}`);
   hanoiArray.push({ from_Tower, to_Tower });
-  // document.dispatchEvent(new KeyboardEvent('keydown', {'key': from_Tower}));
-
-  // https://www.sitepoint.com/delay-sleep-pause-wait/
-  // // sleep2(1000);
-  // // await sleep(1000);
-  // document.dispatchEvent(new KeyboardEvent('keydown', {'key': to_Tower}));
   hanoiAlgo2(n - 1, aux_Tower, to_Tower, from_Tower);
-  // })();
-  // }, 1000)
 }
 
-// hanoiAlgo1(numberOfDisc, TowerNumber.Tower1+1, TowerNumber.Tower3+1, TowerNumber.Tower2+1)
 hanoiAlgo2(
   numberOfDisc,
   TowerNumber.Tower1 + 1,
@@ -418,7 +385,6 @@ function updateStopwatch() {
   var elapsedTime = currentTime - stopWatchStartTime; // calculate elapsed time in milliseconds
   var seconds = Math.floor(elapsedTime / 1000) % 60; // calculate seconds
   var minutes = Math.floor(elapsedTime / 1000 / 60) % 60; // calculate minutes
-  //var hours = Math.floor(elapsedTime / 1000 / 60 / 60); // calculate hours
   var displayTime =
     "Timer " + /*pad(hours) + ":" + */ pad(minutes) + ":" + pad(seconds); // format display time
   document.getElementById("stopwatch").innerHTML = displayTime; // update the display
@@ -449,7 +415,6 @@ function showSolution() {
 
 function resetGame() {
   console.log("reset game");
-  // elapsedPausedTime=0;
   stopWatchStartTime = 0;
   resetStopwatch();
 
@@ -474,5 +439,3 @@ function resetGame() {
 }
 
 blinkElement(container);
-// blinkElement(html_towers[towerNum].firstChild);
-// const allDisc = document.querySelectorAll('.disc')
